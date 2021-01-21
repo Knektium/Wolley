@@ -1,0 +1,14 @@
+#ifndef CAN_NODE_{{ node.name|upper }}_CONF_H
+#define CAN_NODE_{{ node.name|upper }}_CONF_H
+
+#define NODE_ID {{ node_id|hex }}U
+#define NUMBER_OF_CAN_MESSAGE_CONFIGS {{ node.all_messages|length }}U
+
+/* Message masks */
+{% for msg in node.all_messages -%}
+#define CAN_MESSAGE_{{ msg.name|upper }}_MASK {{ msg.get_mask()|hex }}U
+#define CAN_MESSAGE_{{ msg.name|upper }}_INDEX {{ loop.index - 1 }}U
+
+{% endfor -%}
+
+#endif /* End of CAN_NODE_{{ node.name|upper }}_CONF_H */

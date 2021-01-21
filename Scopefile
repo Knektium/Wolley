@@ -1,0 +1,16 @@
+{
+    "messageFile": "./messages.json",
+    "enumFile": "./enums.json",
+    "serialPort": "/dev/ttyS3",
+    "keyMapping": {
+        "w": {
+            "sendMessages": [{
+                "messageName": "WheelControl",
+                "signalValues": {
+                    "Direction": 0,
+                    "Speed": 0
+                }
+            }]
+        }
+    }
+}

@@ -1,0 +1,37 @@
+#include "Dave/Generated/CAN_NODE/can_node.h"
+
+{% for msg in node.all_messages %}
+XMC_CAN_MO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }} = {
+	{%- if msg in node.rx_messages %}
+	.can_mo_type      = XMC_CAN_MO_TYPE_RECMSGOBJ,
+	.can_identifier   = {{ msg.get_listen_id()|hex }}U,
+	{%- endif %}
+	{%- if msg in node.tx_messages %}
+	.can_mo_type      = XMC_CAN_MO_TYPE_TRANSMSGOBJ,
+	.can_identifier   = {{ msg.get_broadcast_id(node_id)|hex }}U,
+	{%- endif %}
+	.can_id_mode      = XMC_CAN_FRAME_TYPE_EXTENDED_29BITS,
+	.can_priority     = XMC_CAN_ARBITRATION_MODE_IDE_DIR_BASED_PRIO_2,
+	.can_id_mask      = {{ msg.get_mask()|hex }}U,
+	.can_ide_mask     = 1U,
+	.can_mo_ptr       = (CAN_MO_TypeDef*) CAN_MO{{ loop.index }},
+	.can_data_length  = 8U,
+	.can_data[1]      = 0x00000000U,
+	.can_data[0]      = 0x00000000U
+};
+
+const CAN_NODE_LMO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }}_Config = {
+	.mo_ptr  = (XMC_CAN_MO_t*) &CAN_NODE_{{ node.name }}_LMO_{{ msg.name }},
+	.number  = {{ loop.index }}U,
+	.tx_sr   = 0U,
+	.rx_sr   = 0U,
+	{%- if msg in node.rx_messages %}
+	.tx_event_enable = false,
+	.rx_event_enable = true
+	{%- endif %}
+	{%- if msg in node.tx_messages %}
+	.tx_event_enable = true,
+	.rx_event_enable = false
+	{%- endif %}
+};
+{% endfor %}

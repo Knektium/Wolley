@@ -1,0 +1,24 @@
+#ifndef CAN_NODE_{{ node.name|upper }}_CONF_XMC1400_H
+#define CAN_NODE_{{ node.name|upper }}_CONF_XMC1400_H
+
+#include "Dave/Generated/CAN_NODE/can_node.h"
+
+#define CAN_MESSAGE_CONFIGS { \
+{%- for index in range(0, 31) -%}
+	{%- if index < node.all_messages|length %}
+	(CAN_NODE_LMO_t *) &CAN_NODE_{{ node.name }}_LMO_{{ node.all_messages[index].name }}_Config, \
+	{%- endif %}
+	{%- if index >= node.all_messages|length %}
+	NULL, \
+	{%- endif %}
+{%- endfor %}
+	NULL \
+}
+
+/* Message configs */
+{%- for msg in node.all_messages %}
+extern XMC_CAN_MO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }};
+extern const CAN_NODE_LMO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }}_Config;
+{% endfor %}
+
+#endif /* End of CAN_NODE_{{ node.name|upper }}_CONF_XMC1400_H */

@@ -1,0 +1,8 @@
+{
+    "configurator": "Codile AB",
+    "description": "Wolley",
+    "nodes": [
+        ["Wheel", "0x11", "Right wheel"],
+        ["Wheel", "0x12", "Left wheel"]
+    ]
+}

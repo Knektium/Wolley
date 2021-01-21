@@ -1,0 +1,44 @@
+#include <DAVE.h>
+#include "CAN_Config.h"
+#include "CAN_Router.h"
+
+void CAN_HandleReceivedMessage(Message_t message)
+{
+	uint8_t from_node_id = (message.id >> {{ FROM_NODE_ID_OFFSET }}U) & 0xFFU;
+	uint8_t to_node_id = (message.id >> {{ TO_NODE_ID_OFFSET }}U) & 0xFFU;
+
+	{% for msg in node.rx_messages -%}
+	{%- if loop.index > 1 -%} else {% endif -%}
+	if ((message.id & CAN_MESSAGE_{{ msg.name|upper }}_MASK) == CAN_MESSAGE_{{ msg.name|upper }}_MASK) {
+		{{ msg.name }}_t s;
+
+		// Parse {{ msg.name }} to struct
+		{%- for signal in msg.signals %}
+
+		s.{{ signal.name }} = 0U;
+		{%- for word_offset in signal.get_words(8) %}
+		s.{{ signal.name }} += ((message.data[{{ word_offset.offset }}U]) & {{ word_offset.mask }}U){% if loop.index > 1 %} << {{ (loop.index - 1) * 8 }}U{% endif %};
+		{%- endfor %}
+
+		{%- endfor %}
+
+		Handle_{{ msg.name }}_Received(s, from_node_id, to_node_id);
+	}
+	{%- endfor %}
+}
+
+{% for msg in node.tx_messages -%}
+void Send_{{ msg.name }}({{ msg.name }}_t *s, uint32_t to_node)
+{
+	uint8_t data[8] = { 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U };
+
+	{% for signal in msg.signals -%}
+	{% for word_offset in signal.get_words(8) -%}
+	data[{{ word_offset.offset }}U] |= ((uint8_t) (s->{{ signal.name }} >> {{ (loop.index - 1) * 8 }}U) << {{ word_offset.bit_offset }}U) & {{ word_offset.mask }}U;
+	{% endfor %}
+	{% endfor -%}
+
+	CAN_NODE_MO_UpdateData(CAN_NODE_0.lmobj_ptr[CAN_MESSAGE_{{ msg.name|upper }}_INDEX], (uint8_t *) data);
+	CAN_NODE_MO_Transmit(CAN_NODE_0.lmobj_ptr[CAN_MESSAGE_{{ msg.name|upper }}_INDEX]);
+}
+{%- endfor %}

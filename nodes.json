@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Wheel",
+        "rx": [
+            "WheelControl"
+        ],
+        "tx":  [
+            "WheelStatus"
+        ]
+    }
+]

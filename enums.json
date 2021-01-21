@@ -1,0 +1,25 @@
+{
+	"Direction": {
+		"NONE": "0x0",
+		"FORWARD": "0x1",
+		"BACKWARD": "0x2"
+	},
+	"YesNo": {
+		"NO": "0x0",
+		"YES": "0x1"
+	},
+	"WheelStatusCode": {
+		"STOPPED": "0x0",
+		"RUNNING": "0x1"
+	},
+	"ShortCircuitCode": {
+		"SCVS1_SCVS2": "0x5",
+		"SCG1_SCVS2": "0x6",
+		"SCVS2": "0x7",
+		"SCVS1_SCG2": "0x9",
+		"SCG1_SCG2": "0xA",
+		"SCG2": "0xB",
+		"SCVS1": "0xD",
+		"SCG1": "0xE" 
+	}
+}
