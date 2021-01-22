@@ -14,6 +14,11 @@
                 "size": "0x2",
                 "offset": "0x10",
 		"displayType": "Direction"
+            },
+            {
+                "name": "Revolutions",
+                "size": "0x10",
+                "offset": "0x18"
             }
         ]
     },
