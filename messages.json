@@ -13,7 +13,7 @@
                 "name": "Direction",
                 "size": "0x2",
                 "offset": "0x10",
-		"displayType": "Direction"
+                "displayType": "Direction"
             },
             {
                 "name": "Revolutions",
@@ -35,43 +35,44 @@
             {
                 "name": "OvertemperatureShutdown",
                 "size": "0x01",
-                "offset": "0x10"
+                "offset": "0x10",
+                "displayType": "YesNo"
             },
             {
                 "name": "CurrentLimitation",
                 "size": "0x01",
                 "offset": "0x11",
-		"displayType": "YesNo"
+                "displayType": "YesNo"
             },
             {
                 "name": "OpenLoad",
                 "size": "0x01",
                 "offset": "0x12",
-		"displayType": "YesNo"
+                "displayType": "YesNo"
             },
             {
                 "name": "Undervoltage",
                 "size": "0x01",
                 "offset": "0x13",
-		"displayType": "YesNo"
+                "displayType": "YesNo"
             },
             {
                 "name": "ShortCircuitCode",
                 "size": "0x04",
                 "offset": "0x14",
-		"displayType": "ShortCircuitCode"
+                "displayType": "ShortCircuitCode"
             },
             {
                 "name": "Status",
                 "size": "0x2",
                 "offset": "0x18",
-		"displayType": "WheelStatusCode"
+                "displayType": "WheelStatusCode"
             },
             {
                 "name": "Direction",
                 "size": "0x2",
                 "offset": "0x1A",
-		"displayType": "Direction"
+                "displayType": "Direction"
             },
             {
                 "name": "RequestedRevolutionsPerMinute",
