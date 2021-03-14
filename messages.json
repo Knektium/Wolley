@@ -160,6 +160,11 @@
                 "name": "DutyCycle",
                 "size": "0x8",
                 "offset": "0x20"
+            },
+            {
+                "name": "Temperature",
+                "size": "0x8",
+                "offset": "0x28"
             }
         ]
     }
