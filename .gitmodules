@@ -1,0 +1,3 @@
+[submodule "FW_CentrifugalFanECU"]
+	path = FW_CentrifugalFanECU
+	url = git@github.com:CodileAB/FW_CentrifugalFanECU.git
