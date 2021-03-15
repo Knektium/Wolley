@@ -1,12 +1,4 @@
 [
-    {
-        "name": "Wheel",
-        "rx": [
-            "WheelControl"
-        ],
-        "tx":  [
-            "WheelStatus"
-        ]
-    },
+    { "file": "FW_StandardWheelECU/Networking/nodes.json" },
     { "file": "FW_CentrifugalFanECU/Networking/nodes.json" }
 ]
