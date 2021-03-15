@@ -5,10 +5,41 @@
     "keyMapping": {
         "w": {
             "sendMessages": [{
-                "messageName": "WheelControl",
+                "messageName": "FanControl",
+                "recipient_node_id": "0x21",
                 "signalValues": {
-                    "Direction": 0,
-                    "Speed": 0
+                    "Direction": 1,
+                    "DutyCycle": 100
+                }
+            }]
+        },
+        "e": {
+            "sendMessages": [{
+                "messageName": "FanControl",
+                "recipient_node_id": "0x21",
+                "signalValues": {
+                    "Direction": 1,
+                    "DutyCycle": 50
+                }
+            }]
+        },
+        "r": {
+            "sendMessages": [{
+                "messageName": "FanControl",
+                "recipient_node_id": "0x21",
+                "signalValues": {
+                    "Direction": 1,
+                    "DutyCycle": 30
+                }
+            }]
+        },
+        "t": {
+            "sendMessages": [{
+                "messageName": "FanControl",
+                "recipient_node_id": "0x21",
+                "signalValues": {
+                    "Direction": 1,
+                    "DutyCycle": 0
                 }
             }]
         }
