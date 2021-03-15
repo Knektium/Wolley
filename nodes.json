@@ -8,13 +8,5 @@
             "WheelStatus"
         ]
     },
-    {
-        "name": "Fan",
-        "rx": [
-            "FanControl"
-        ],
-        "tx":  [
-            "FanStatus"
-        ]
-    }
+    { "file": "FW_CentrifugalFanECU/Networking/nodes.json" }
 ]
