@@ -1,6 +1,6 @@
 [submodule "FW_CentrifugalFanECU"]
-	path = FW_CentrifugalFanECU
+	path = FW_FanECU
 	url = git@github.com:CodileAB/FW_FanECU.git
 [submodule "FW_StandardWheelECU"]
-	path = FW_StandardWheelECU
+	path = FW_WheelECU
 	url = git@github.com:CodileAB/FW_WheelECU.git
