@@ -1,0 +1,80 @@
+#include <DAVE.h>
+#include "tasks.h"
+#include "MessageManager.h"
+#include "CAN_Config.h"
+#include "CAN_Config_XMC1400.h"
+
+#define MESSAGE_MANAGER_STACK_DEPTH	300U
+
+#define MESSAGE_QUEUE_LENGTH		12U
+#define MESSAGE_QUEUE_ITEM_SIZE		sizeof (Message_t)
+
+QueueHandle_t xQueue_Messages;
+TaskHandle_t xMessageManagerHandle = NULL;
+
+
+{% for msg in node.tx_messages -%}
+void MessageManager_Send_{{ msg.name }}({{ msg.name }}_t *s, uint32_t to_node)
+{
+	uint8_t data[8] = { 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U };
+
+	{% for signal in msg.signals -%}
+	{% for word_offset in signal.get_words(8) -%}
+	data[{{ word_offset.offset }}U] |= ((uint8_t) (s->{{ signal.name }} >> {{ (loop.index - 1) * 8 }}U) << {{ word_offset.bit_offset }}U) & {{ word_offset.mask }}U;
+	{% endfor %}
+	{% endfor -%}
+
+	CAN_NODE_0_SendMessage(CAN_MESSAGE_{{ msg.name|upper }}_INDEX, (uint8_t *) data);
+}
+{% endfor %}
+
+void MessageManager_PushReceivedMessage(Message_t *message)
+{
+	BaseType_t xHigherPriorityTaskWoken;
+	xHigherPriorityTaskWoken = pdFALSE;
+
+	xQueueSendFromISR(xQueue_Messages, message, &xHigherPriorityTaskWoken);
+}
+
+void MessageManager_HandleReceivedMessage(Message_t message)
+{
+	uint8_t from_node_id = (message.id >> {{ FROM_NODE_ID_OFFSET }}U) & 0xFFU;
+	uint8_t to_node_id = (message.id >> {{ TO_NODE_ID_OFFSET }}U) & 0xFFU;
+
+	{% for msg in node.rx_messages -%}
+	{%- if loop.index > 1 -%} else {% endif -%}
+	if ((message.id & CAN_MESSAGE_{{ msg.name|upper }}_MASK) == CAN_MESSAGE_{{ msg.name|upper }}_MASK) {
+		{{ msg.name }}_t s;
+
+		// Parse {{ msg.name }} to struct
+		{%- for signal in msg.signals %}
+
+		s.{{ signal.name }} = 0U;
+		{%- for word_offset in signal.get_words(8) %}
+		s.{{ signal.name }} += ((message.data[{{ word_offset.offset }}U]) & {{ word_offset.mask }}U){% if loop.index > 1 %} << {{ (loop.index - 1) * 8 }}U{% endif %};
+		{%- endfor %}
+
+		{%- endfor %}
+
+		Handle_{{ msg.name }}_Received(s, from_node_id, to_node_id);
+	}
+	{%- endfor %}
+}
+
+void MessageManager_Main(void *pvParameters)
+{
+	Message_t message;
+
+	while (1U) {
+		if (xQueueReceive(xQueue_Messages, &message, (TickType_t) 2000)) {
+			// Route it
+			MessageManager_HandleReceivedMessage(message);
+		}
+	}
+}
+
+void MessageManager_Init(void)
+{
+	xQueue_Messages = xQueueCreate(MESSAGE_QUEUE_LENGTH, MESSAGE_QUEUE_ITEM_SIZE);
+	xTaskCreate(MessageManager_Main, "MessageManager_Main", MESSAGE_MANAGER_STACK_DEPTH, NULL, (tskIDLE_PRIORITY + 3), &xMessageManagerHandle);
+}

@@ -1,0 +1,37 @@
+#ifndef TASKS_MESSAGEMANAGER_H_
+#define TASKS_MESSAGEMANAGER_H_
+
+#include <stdint.h>
+#include "FREERTOS/FreeRTOS.h"
+
+extern TaskHandle_t xMessageManagerHandle;
+
+typedef struct {
+	uint32_t id;
+	uint8_t data[8];
+	uint32_t crc;
+} Message_t;
+
+/* Message struct typedefs */
+{% for msg in node.all_messages -%}
+typedef struct {{ msg.name }}_s {
+{%- for signal in msg.signals %}
+	uint{{ signal.get_word_size(8) * 8 }}_t {{ signal.name }};
+{%- endfor %}
+} {{ msg.name }}_t;
+
+{% endfor -%}
+
+{%- for msg in node.tx_messages -%}
+extern void MessageManager_Send_{{ msg.name }}({{ msg.name }}_t *s, uint32_t to_node);
+{% endfor -%}
+{%- for msg in node.rx_messages -%}
+extern void Handle_{{ msg.name }}_Received({{ msg.name }}_t msg, uint8_t from_node_id, uint8_t to_node_id);
+{% endfor -%}
+
+extern void MessageManager_PushReceivedMessage(Message_t *message);
+extern void MessageManager_HandleReceivedMessage(Message_t message);
+extern void MessageManager_Init(void);
+extern void MessageManager_Main(void *pvParameters);
+
+#endif /* End of TASKS_MESSAGEMANAGER_H */

@@ -1,4 +1,5 @@
-#include "Dave/Generated/CAN_NODE/can_node.h"
+#include <DAVE.h>
+#include "Tasks/MessageManager.h"
 
 {% for msg in node.all_messages %}
 XMC_CAN_MO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }} = {
@@ -23,15 +24,74 @@ XMC_CAN_MO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }} = {
 const CAN_NODE_LMO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }}_Config = {
 	.mo_ptr  = (XMC_CAN_MO_t*) &CAN_NODE_{{ node.name }}_LMO_{{ msg.name }},
 	.number  = {{ loop.index }}U,
-	.tx_sr   = 0U,
-	.rx_sr   = 0U,
 	{%- if msg in node.rx_messages %}
 	.tx_event_enable = false,
-	.rx_event_enable = true
+	.rx_event_enable = true,
 	{%- endif %}
 	{%- if msg in node.tx_messages %}
 	.tx_event_enable = true,
-	.rx_event_enable = false
+	.rx_event_enable = false,
 	{%- endif %}
+	.tx_sr   = 2U,
+	.rx_sr   = 1U
 };
 {% endfor %}
+
+void CAN_NODE_0_SendMessage(uint8_t message_index, uint8_t *data)
+{
+	CAN_NODE_MO_UpdateData(CAN_NODE_0.lmobj_ptr[message_index], (uint8_t *) data);
+	CAN_NODE_MO_Transmit(CAN_NODE_0.lmobj_ptr[message_index]);
+}
+
+void CAN_NODE_0_ErrorHandler(void)
+{
+        uint32_t status = 0x00U;
+
+        // Check for Node error
+        status = CAN_NODE_GetStatus(&CAN_NODE_0);
+        if (status & XMC_CAN_NODE_STATUS_ALERT_WARNING)
+        {
+                // Clear the flag
+                CAN_NODE_DisableEvent(&CAN_NODE_0, XMC_CAN_NODE_EVENT_ALERT);
+        }
+}
+
+void CAN_NODE_0_TransmitHandler(void)
+{
+        // Empty
+}
+
+void CAN_NODE_0_ReceiveHandler(void)
+{
+        uint32_t status = 0x00U;
+
+        for (uint8_t i = 0; i < CAN_NODE_0.mo_count; i++) {
+                CAN_NODE_LMO_t *can_obj = CAN_NODE_0.lmobj_ptr[i];
+                XMC_CAN_MO_t *mo = can_obj->mo_ptr;
+
+                if (XMC_CAN_MO_TYPE_RECMSGOBJ != mo->can_mo_type) {
+                        continue;
+                }
+
+                status = CAN_NODE_MO_GetStatus((void *) can_obj);
+                if (status & XMC_CAN_MO_STATUS_RX_PENDING) {
+                        Message_t message;
+                        uint8_t *can_data = mo->can_data_byte;
+
+                        CAN_NODE_MO_ClearStatus((void *) can_obj, XMC_CAN_MO_RESET_STATUS_RX_PENDING);
+                        CAN_NODE_MO_Receive((void *) can_obj);
+
+                        message.id = mo->can_identifier;
+                        message.data[0] = can_data[0];
+                        message.data[1] = can_data[1];
+                        message.data[2] = can_data[2];
+                        message.data[3] = can_data[3];
+                        message.data[4] = can_data[4];
+                        message.data[5] = can_data[5];
+                        message.data[6] = can_data[6];
+                        message.data[7] = can_data[7];
+
+                        MessageManager_PushReceivedMessage(&message);
+                }
+        }
+}

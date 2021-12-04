@@ -21,4 +21,7 @@ extern XMC_CAN_MO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }};
 extern const CAN_NODE_LMO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }}_Config;
 {% endfor %}
 
+extern void CAN_NODE_0_SendMessage(uint8_t message_index, uint8_t *data);
+extern void CAN_NODE_0_ReceiveHandler(void);
+
 #endif /* End of CAN_NODE_{{ node.name|upper }}_CONF_XMC1400_H */
