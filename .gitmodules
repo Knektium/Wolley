@@ -4,3 +4,6 @@
 [submodule "FW_StandardWheelECU"]
 	path = FW_WheelECU
 	url = git@github.com:CodileAB/FW_WheelECU.git
+[submodule "FW_BatteryECU"]
+	path = FW_BatteryECU
+	url = https://github.com/CodileAB/FW_BatteryECU
