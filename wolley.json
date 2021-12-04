@@ -1,9 +1,10 @@
 {
-    "configurator": "Codile AB",
-    "description": "Wolley",
+    "configurator": "Knekt Technologies AB",
+    "description": "Wolley One RC",
     "nodes": [
         ["Wheel", "0x11", "Right wheel"],
         ["Wheel", "0x12", "Left wheel"],
-        ["Fan", "0x21", "Centrifugal fan"]
+        ["Fan", "0x21", "Centrifugal fan"],
+        ["Battery", "0x31", "Battery"]
     ]
 }
