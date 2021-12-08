@@ -4,6 +4,7 @@
  */
 #include <DAVE.h>
 #include "Tasks/MessageManager.h"
+#include "interrupt_mapping.h"
 
 {% for msg in node.all_messages %}
 XMC_CAN_MO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }} = {
@@ -36,8 +37,8 @@ const CAN_NODE_LMO_t CAN_NODE_{{ node.name }}_LMO_{{ msg.name }}_Config = {
 	.tx_event_enable = true,
 	.rx_event_enable = false,
 	{%- endif %}
-	.tx_sr   = 2U,
-	.rx_sr   = 1U
+	.tx_sr   = INTERRUPT_CAN_NODE_0_TRANSMIT,
+	.rx_sr   = INTERRUPT_CAN_NODE_0_RECEIVE
 };
 {% endfor %}
 
