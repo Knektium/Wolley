@@ -1,9 +1,9 @@
 [submodule "FW_CentrifugalFanECU"]
 	path = FW_FanECU
-	url = git@github.com:CodileAB/FW_FanECU.git
+	url = git@github.com:Knektium/FW_FanECU.git
 [submodule "FW_StandardWheelECU"]
 	path = FW_WheelECU
-	url = git@github.com:CodileAB/FW_WheelECU.git
+	url = git@github.com:Knektium/FW_WheelECU.git
 [submodule "FW_BatteryECU"]
 	path = FW_BatteryECU
-	url = https://github.com/CodileAB/FW_BatteryECU
+	url = https://github.com/Knektium/FW_BatteryECU
