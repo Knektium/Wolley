@@ -1,5 +1,0 @@
-[
-    { "file": "FW_WheelECU/Networking/nodes.json" },
-    { "file": "FW_FanECU/Networking/nodes.json" },
-    { "file": "FW_BatteryECU/Networking/nodes.json" }
-]

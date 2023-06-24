@@ -1,5 +1,0 @@
-[
-    { "file": "FW_WheelECU/Networking/messages.json" },
-    { "file": "FW_FanECU/Networking/messages.json" },
-    { "file": "FW_BatteryECU/Networking/messages.json" }
-]
