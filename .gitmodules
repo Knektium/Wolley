@@ -6,4 +6,4 @@
 	url = git@github.com:Knektium/FW_WheelECU.git
 [submodule "FW_BatteryECU"]
 	path = FW_BatteryECU
-	url = https://github.com/Knektium/FW_BatteryECU
+	url = git@github.com:Knektium/FW_BatteryECU.git
