@@ -1,21 +1,29 @@
 {
     "configurator": "Knektium AB",
     "description": "Wolley RC1",
-    "nodeInstances": [
-        ["Wheel", "0x11", "Right wheel"],
-        ["Wheel", "0x12", "Left wheel"],
-        ["Fan", "0x21", "Centrifugal fan"],
-        ["Battery", "0x31", "Battery"]
-    ],
+    "nodeInstances": {
+        "0x11": {
+            "name": "RIGHT WHEEL",
+            "type": "Wheel"
+        },
+        "0x12": {
+            "name": "LEFT WHEEL",
+            "type": "Wheel"
+        },
+        "0x21": {
+            "name": "FAN",
+            "type": "Fan"
+        },
+        "0x31": {
+            "name": "BATTERY",
+            "type": "Battery"
+        }
+    },
     "enums": {
         "Direction": {
             "NONE": "0x0",
             "FORWARD": "0x1",
             "BACKWARD": "0x2"
-        },
-        "YesNo": {
-            "NO": "0x0",
-            "YES": "0x1"
         },
         "WheelStatusCode": {
             "STOPPED": "0x0",
